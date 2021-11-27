@@ -1,0 +1,10 @@
+FROM python:3.7.12-alpine
+
+RUN mkdir -p /app/src
+WORKDIR /app
+COPY fastapi/requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY fastapi/src/ /app/src
+WORKDIR /app/src
+ENTRYPOINT ["python3", "server.py"]

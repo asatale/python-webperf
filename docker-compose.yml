@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  server:
+    image: webserver
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE}
+    command:
+      - "-addr"
+      - "0.0.0.0:8000"
+      - "-delay"
+      - "20"
+      - "-dprob"
+      - "20"
+      - "-cancel"
+      - "-cprob"
+      - "20"
+    ports:
+      - "8000:8000"
+    networks:
+      - testnet
+networks:
+  testnet: {}
