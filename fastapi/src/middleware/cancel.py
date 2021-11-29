@@ -7,7 +7,6 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette.types import ASGIApp
 from config import cfg
-from log import logger
 
 
 class CancelMiddleware(BaseHTTPMiddleware):

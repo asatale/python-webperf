@@ -11,13 +11,28 @@ services:
       - "-delay"
       - "20"
       - "-dprob"
-      - "20"
+      - "100"
       - "-cancel"
       - "-cprob"
-      - "20"
+      - "0"
     ports:
       - "8000:8000"
     networks:
       - testnet
+  traffgen:
+    image: williamyeh/hey:latest
+    command:
+      - "-n"
+      - "100000"
+      - "-c"
+      - "1000"
+      - "-m"
+      - "GET"
+      - "http://server:8000"
+    depends_on:
+      - server
+    networks:
+      - testnet
+
 networks:
   testnet: {}

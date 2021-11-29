@@ -1,7 +1,7 @@
 .PHONY: all
 all:
 
-FRAMEWORK ?= flask
+FRAMEWORK ?= fastapi
 
 .PHONY:build
 build:
@@ -16,3 +16,13 @@ else
 	$(error "Unsupported framework $(FRAMEWORK)")
 endif
 endif
+
+
+.PHONY:up
+up:
+	@docker-compose up -d
+
+
+.PHONY:down
+down:
+	@docker-compose down -v

@@ -6,10 +6,9 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette.types import ASGIApp
 from config import cfg
-from log import logger
 
 
-SECOND_TO_MILLISECOND = 0.001
+MILLISECOND_IN_SECOND = 1000
 
 
 class DelayMiddleware(BaseHTTPMiddleware):
@@ -23,5 +22,5 @@ class DelayMiddleware(BaseHTTPMiddleware):
         if cfg.delay > 0 and cfg.dprob > 0:
             rand = random.randint(0, 100)
             if rand <= cfg.dprob:
-                await asyncio.sleep(cfg.delay * SECOND_TO_MILLISECOND)
+                await asyncio.sleep(int(cfg.delay/MILLISECOND_IN_SECOND))
         return await call_next(request)
