@@ -5,7 +5,7 @@ stdout_handler = logging.StreamHandler(sys.stdout)
 
 logging.basicConfig(
     level=logging.INFO,
-    format='[%(asctime)s] [%(filename)s:%(lineno)d] %(levelname)s: %(message)s',
+    format=' [%(levelname)s] [%(asctime)s] [%(filename)s:%(lineno)d]: %(message)s',
     handlers=[stdout_handler])
 
 logger = logging.getLogger("ASGIApp")

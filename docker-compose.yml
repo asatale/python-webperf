@@ -11,10 +11,10 @@ services:
       - "-delay"
       - "20"
       - "-dprob"
-      - "100"
+      - "10"
       - "-cancel"
       - "-cprob"
-      - "0"
+      - "10"
     ports:
       - "8000:8000"
     networks:
