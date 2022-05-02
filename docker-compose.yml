@@ -7,16 +7,17 @@ services:
       dockerfile: ${DOCKERFILE}
     command:
       - "-addr"
-      - "0.0.0.0:8000"
+      - "0.0.0.0:8080"
       - "-delay"
-      - "20"
+      - "5"
       - "-dprob"
-      - "10"
+      - "0"
       - "-cancel"
       - "-cprob"
-      - "10"
+      - "0"
     ports:
       - "8000:8000"
+      - "10000:10000"
     networks:
       - testnet
   traffgen:
@@ -25,10 +26,10 @@ services:
       - "-n"
       - "100000"
       - "-c"
-      - "1000"
+      - "2000"
       - "-m"
       - "GET"
-      - "http://server:8000"
+      - "http://server:8080/echo"
     depends_on:
       - server
     networks:

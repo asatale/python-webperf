@@ -2,29 +2,23 @@ import asyncio
 import uvicorn
 import multiprocessing
 from fastapi import FastAPI
-from middleware.delay import DelayMiddleware
-from middleware.cancel import CancelMiddleware
-from api.hello import app as helloApp
+from middleware import DelayMiddleware, CancelMiddleware
+from api import EchoRouter
 from config import cfg
 from log import logger
-
-app = FastAPI()
-app.mount("/", helloApp)
-app.add_middleware(DelayMiddleware)
-app.add_middleware(CancelMiddleware)
+from prometheus import PrometheusServer
 
 
-def main():
-    def _num_workers():
-        return (multiprocessing.cpu_count() * 2) + 1
 
-    addr, port = cfg.addr.split(":")
-    loop = asyncio.new_event_loop()
-    config = uvicorn.Config(
+def _num_workers():
+    return (multiprocessing.cpu_count()* 2) + 1
+
+def get_uvicorn_config(app, addr, port):
+    return uvicorn.Config(
         app=app,
         host=addr,
         port=int(port),
-        log_level="info",
+        log_level="warning",
         log_config={
             "version": 1,
             "formatters": {
@@ -40,18 +34,35 @@ def main():
                 },
             },
         },
-        limit_concurrency=1000,
+        limit_concurrency=10000,
         workers=_num_workers(),
         loop=loop
     )
 
-    server = uvicorn.Server(config)
 
-    try:
-        loop.run_until_complete(server.serve())
-    except Exception as e:
-        logger.error(f"Exception {e} in asyncio loop")
+def create_app():
+    app = FastAPI()
+    app.include_router(EchoRouter)
+    app.add_middleware(DelayMiddleware)
+    app.add_middleware(CancelMiddleware)
+    return app
 
+async def main(loop):
+    addr, port = cfg.addr.split(":")
+    app = create_app()
+    config = get_uvicorn_config(app, addr, port)
+    uvicorn_server = uvicorn.Server(config)
+    prometheus_server = PrometheusServer(cfg.prometheus)
+
+    logger.info("Starting Server")
+    await asyncio.gather(
+        uvicorn_server.serve(),
+        prometheus_server.start()
+    )
+    logger.info("Stopping Server")
+    
 
 if __name__ == "__main__":
-    main()
+    loop = asyncio.new_event_loop()
+    asyncio.run(main(loop))
+    
