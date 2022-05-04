@@ -6,7 +6,7 @@ from config import cfg
 
 
 class App(Flask):
-    def __init__(self, name='TestApp'):
+    def __init__(self, name='EchoServer'):
         super().__init__(name)
         self.register_blueprint(echo_blueprint)
 
@@ -32,12 +32,10 @@ def _num_workers():
     return (multiprocessing.cpu_count() * 2) + 1
 
 def main():
-
-    addr, port = cfg.addr.split(":")
     options = {
-        'bind': '%s:%s' % (addr, port),
-        'workers': _num_workers(),
-        'threads': 10,
+        "bind": cfg.addr,
+        "workers": _num_workers(),
+        "threads": 100,
     }
     Server(App(), options).run()
 

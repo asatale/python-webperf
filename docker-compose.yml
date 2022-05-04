@@ -7,11 +7,11 @@ services:
       dockerfile: ${DOCKERFILE}
     command:
       - "-addr"
-      - "0.0.0.0:8080"
+      - "0.0.0.0:8000"
       - "-delay"
-      - "5"
+      - "200"
       - "-dprob"
-      - "0"
+      - "100"
       - "-cancel"
       - "-cprob"
       - "0"
@@ -24,12 +24,12 @@ services:
     image: williamyeh/hey:latest
     command:
       - "-n"
-      - "100000"
+      - "76000"
       - "-c"
       - "2000"
       - "-m"
       - "GET"
-      - "http://server:8080/echo"
+      - "http://server:8000/echo"
     depends_on:
       - server
     networks:

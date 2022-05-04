@@ -13,6 +13,6 @@ def delay_middleware(f):
         if cfg.delay > 0 and cfg.dprob > 0:
             rand = random.randint(0, 100)
             if rand <= cfg.dprob:
-                time.sleep(int(cfg.delay * MILLISECOND_IN_SECOND))
+                time.sleep(cfg.delay/MILLISECOND_IN_SECOND)
         return f(*args, **kwargs)
     return decorated_function
