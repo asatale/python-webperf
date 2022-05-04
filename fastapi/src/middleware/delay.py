@@ -22,5 +22,5 @@ class DelayMiddleware(BaseHTTPMiddleware):
         if cfg.delay > 0 and cfg.dprob > 0:
             rand = random.randint(0, 100)
             if rand <= cfg.dprob:
-                await asyncio.sleep(int(cfg.delay/MILLISECOND_IN_SECOND))
+                await asyncio.sleep(cfg.delay/MILLISECOND_IN_SECOND)
         return await call_next(request)

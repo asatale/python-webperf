@@ -1,14 +1,14 @@
 import multiprocessing
 import gunicorn.app.base
 from flask import Flask
-from api.hello import hello_blueprint
+from api.echo import echo_blueprint
 from config import cfg
 
 
 class App(Flask):
-    def __init__(self, name='TestApp'):
+    def __init__(self, name='EchoServer'):
         super().__init__(name)
-        self.register_blueprint(hello_blueprint)
+        self.register_blueprint(echo_blueprint)
 
 
 class Server(gunicorn.app.base.BaseApplication):
@@ -28,15 +28,14 @@ class Server(gunicorn.app.base.BaseApplication):
         return self.application
 
 
-def main():
-    def _num_workers():
-        return (multiprocessing.cpu_count() * 2) + 1
+def _num_workers():
+    return (multiprocessing.cpu_count() * 2) + 1
 
-    addr, port = cfg.addr.split(":")
+def main():
     options = {
-        'bind': '%s:%s' % (addr, port),
-        'workers': _num_workers(),
-        'threads': 2,
+        "bind": cfg.addr,
+        "workers": _num_workers(),
+        "threads": 100,
     }
     Server(App(), options).run()
 

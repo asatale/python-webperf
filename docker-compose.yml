@@ -9,7 +9,7 @@ services:
       - "-addr"
       - "0.0.0.0:8000"
       - "-delay"
-      - "20"
+      - "200"
       - "-dprob"
       - "100"
       - "-cancel"
@@ -17,18 +17,19 @@ services:
       - "0"
     ports:
       - "8000:8000"
+      - "10000:10000"
     networks:
       - testnet
   traffgen:
     image: williamyeh/hey:latest
     command:
       - "-n"
-      - "100000"
+      - "76000"
       - "-c"
-      - "1000"
+      - "2000"
       - "-m"
       - "GET"
-      - "http://server:8000"
+      - "http://server:8000/echo"
     depends_on:
       - server
     networks:
